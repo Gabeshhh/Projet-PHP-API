@@ -3,3 +3,11 @@
 require_once 'config.php';
 
 header('Content-Type: application/json');
+
+$url = $_SERVER['REQUEST_URI'];
+
+$method = $_SERVER['REQUEST_METHOD'];
+
+
+if ($method === 'GET' && $url === '/') {
+    echo json_encode(["message" => "Bienvenue sur l'API Films !"]);
