@@ -9,3 +9,9 @@ if (!in_array($type, $typesAutorisés)) {
     echo json_encode(["error" => "Type invalide. Utilise : popular, top_rated, upcoming ou now_playing"]);
     exit;
 }
+
+$urlTMDB = TMDB_URL . "/movie/" . $type . "?api_key=" . TMDB_API_KEY . "&language=fr-FR";
+
+$ch = curl_init($urlTMDB);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
