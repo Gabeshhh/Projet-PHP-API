@@ -14,3 +14,11 @@ if ($method === 'GET' && $url === '/') {
 
 } elseif ($method === 'GET' && str_starts_with($url, '/movies')) {
     require_once 'movies.php';
+
+} elseif (str_starts_with($url, '/favorites')) {
+    require_once 'favorites.php';
+
+} else {
+    http_response_code(404);
+    echo json_encode(["error" => "Route introuvable"]);
+}
