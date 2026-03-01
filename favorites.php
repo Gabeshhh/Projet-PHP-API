@@ -9,3 +9,10 @@ function lireFavoris($fichier){
     }
 }
 
+$url = $_SERVER['REQUEST_URL'];
+$methode = $_SERVER['REQUEST_METHOD'];
+
+// Message de bienvenue dans le ../
+if ($methode === 'GET' && $url === '/'){
+    echo json_encode(["message " => "Bienvenue sur l'API"]);
+}
