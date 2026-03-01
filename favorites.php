@@ -15,4 +15,12 @@ $methode = $_SERVER['REQUEST_METHOD'];
 // Message de bienvenue dans le ../
 if ($methode === 'GET' && $url === '/'){
     echo json_encode(["message " => "Bienvenue sur l'API"]);
+} elseif (!$methode === 'GET' && str_starts_with($url, '/movies')){
+    require 'moovies.php';
+} elseif (str_starts_with($url, '/favorites')) {
+    require_once 'favorites.php';
+} else {
+    http_response_code(404);
+    echo json_encode(["erreur" => "Introuvable"]);
 }
+    
