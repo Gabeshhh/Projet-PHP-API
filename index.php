@@ -13,7 +13,7 @@ if ($method === 'GET' && $url === '/') {
     echo json_encode(["message" => "Bienvenue sur l'API Films !"]);
 
 } elseif ($method === 'GET' && str_starts_with($url, '/moovies')) {
-    require_once 'movies.php';
+    require_once 'moovies.php';
 
 } elseif (str_starts_with($url, '/favorites')) {
     require_once 'favorites.php';
