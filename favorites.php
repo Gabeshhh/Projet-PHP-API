@@ -2,27 +2,27 @@
 
 $fichier = __DIR__ . '/data/favorites.json';
 
-// Lire les favories depuis le fichier json 
-function lireFavoris($fichier){
-    if (!file_exists($fichier)){
-        return []; // Si le fichier est différents de [] donc d'une liste vide il renvoie le fichier
+// Lire les favoris depuis le fichier json
+function lireFavoris($fichier) {
+    if (!file_exists($fichier)) {
+        return [];
     }
     $contenu = file_get_contents($fichier);
     return json_decode($contenu, true) ?? [];
 }
 
-// Sauvegarde 
-function sauvegarde($fichier, $favoris){
+// Sauvegarder les favoris dans le fichier
+function sauvegarderFavoris($fichier, $favoris) {
     file_put_contents($fichier, json_encode($favoris, JSON_PRETTY_PRINT));
 }
 
-// Méthode GET 
-if ($methode === "POST"){
-    $body = file_get_contents("php://input");
-    $film = json_decode($body, true);
+// GET /favorites - voir les favoris
+if ($method === 'GET') {
+    $favoris = lireFavoris($fichier);
+    echo json_encode($favoris);
 }
 
-// Méthode POST - Ajouté un film
+// POST /favorites - ajouter un film
 elseif ($method === 'POST') {
     $body = file_get_contents('php://input');
     $film = json_decode($body, true);
@@ -32,6 +32,7 @@ elseif ($method === 'POST') {
         echo json_encode(["error" => "Il faut envoyer un JSON avec 'id' et 'title'"]);
         exit;
     }
+
     $favoris = lireFavoris($fichier);
 
     foreach ($favoris as $fav) {
@@ -49,29 +50,27 @@ elseif ($method === 'POST') {
     ];
 
     sauvegarderFavoris($fichier, $favoris);
-
     http_response_code(201);
     echo json_encode(["message" => "Film ajouté aux favoris !"]);
 }
 
-// Méthode DELETE - supprimer un film 
+// DELETE /favorites?id=123 - supprimer un film
 elseif ($method === 'DELETE') {
     $id = $_GET['id'] ?? null;
 
     if (!$id) {
         http_response_code(400);
-        echo json_encode(["error" => "Il faut passer un 'id' en paramètre : /favorites?id=123"]);
+        echo json_encode(["error" => "Paramètre 'id' manquant. Ex: /favorites?id=123"]);
         exit;
     }
 
     $favoris = lireFavoris($fichier);
-
     $nouveauxFavoris = [];
     $trouvé = false;
 
     foreach ($favoris as $fav) {
         if ($fav['id'] == $id) {
-            $trouvé = true; 
+            $trouvé = true;
         } else {
             $nouveauxFavoris[] = $fav;
         }
@@ -87,8 +86,7 @@ elseif ($method === 'DELETE') {
     echo json_encode(["message" => "Film supprimé des favoris !"]);
 }
 
-// Si erreur 
 else {
     http_response_code(405);
-    echo json_encode(["error" => "Erreur"]);
+    echo json_encode(["error" => "Méthode non autorisée"]);
 }
